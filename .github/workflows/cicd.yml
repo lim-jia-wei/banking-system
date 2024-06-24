@@ -26,11 +26,14 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov
-        pytest test_bank.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest test_bank.py --doctest-modules --junitxml=test-results/test-results.xml --cov=com --cov-report=xml --cov-report=html
 
     - name: Publish test results
-      uses: EnricoMi/publish-unit-test-result-action@v2
+      uses: aiaibot/publish-unit-test-result@v1
       if: always()
       with:
-        files: |
-          junit/test-results.xml
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        check_name: Unit Test Results
+        files: test-results/*.xml
+        report_individual_runs: true
+        deduplicate_classes_by_file_name: false
