@@ -1,3 +1,4 @@
+# standard library
 import csv
 from typing import Dict, Optional
 
@@ -69,15 +70,7 @@ class Bank:
         except FileNotFoundError:
             print(f"File {filename} not found.")
 
-    def __str__(self) -> str:
-        return "\n".join(str(account) for account in self.accounts.values())
-
-
-if __name__ == '__main__':
-    bank = Bank()
-    bank.load_from_csv("bank_state.csv")
-
-    def print_menu():
+    def print_menu(self) -> None:
         print("\nMenu:")
         print("1. Create Account")
         print("2. Deposit")
@@ -87,8 +80,16 @@ if __name__ == '__main__':
         print("6. Load State")
         print("7. Exit")
 
+    def __str__(self) -> str:
+        return "\n".join(str(account) for account in self.accounts.values())
+
+
+if __name__ == '__main__':
+    bank = Bank()
+    bank.load_from_csv("bank_state.csv")
+
     while True:
-        print_menu()
+        bank.print_menu()
         choice = input("Choose an option: ")
 
         if choice == "1":

@@ -33,6 +33,4 @@ jobs:
       if: always()
       with:
         files: |
-          test-results.xml
-          test-results/**/*.xml
-          test-results/**/*.json
+          junit/test-results.xml
