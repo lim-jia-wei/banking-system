@@ -1,6 +1,14 @@
-import pytest
-from bank import Account, Bank, BankApp
+# standard improt
 from unittest.mock import patch
+
+# third party import
+import pytest
+
+# local import
+from bank import Account, Bank, BankApp
+
+# Disable pylint errors for mock_input which are used to mock user input
+# pylint: disable=unused-argument
 
 
 @pytest.fixture(name="bank")
@@ -39,7 +47,7 @@ def test_deposit(account, capsys):
     account.deposit(50.0)
     captured = capsys.readouterr()
     assert account.balance == 150.0
-    assert "Deposited $50.0 to Test Account's account." in captured.out
+    assert "Deposited $50.00 to Test Account's account." in captured.out
 
 
 @pytest.mark.parametrize(
@@ -60,7 +68,7 @@ def test_withdraw(account, capsys):
     account.withdraw(50.0)
     captured = capsys.readouterr()
     assert account.balance == 50.0
-    assert "Withdrew $50.0 from Test Account's account." in captured.out
+    assert "Withdrew $50.00 from Test Account's account." in captured.out
 
 
 @pytest.mark.parametrize(
@@ -87,7 +95,7 @@ def test_transfer(bank, capsys):
     captured = capsys.readouterr()
     assert alice_account.balance == 50.0
     assert bob_account.balance == 100.0
-    assert "Transferred $50.0 from Alice's account to Bob's account." in captured.out
+    assert "Transferred $50.00 from Alice's account to Bob's account." in captured.out
 
 
 @pytest.mark.parametrize(
@@ -159,7 +167,7 @@ def test_bank_app_create_account(mock_input, bank_app, bank, capsys):
 def test_bank_app_deposit(mock_input, bank_app, bank, capsys):
     bank_app.run()
     captured = capsys.readouterr()
-    assert "Deposited $50.0 to Alice's account." in captured.out
+    assert "Deposited $50.00 to Alice's account." in captured.out
     assert bank.get_account("Alice").balance == 150.0
 
 
@@ -167,15 +175,16 @@ def test_bank_app_deposit(mock_input, bank_app, bank, capsys):
 def test_bank_app_withdraw(mock_input, bank_app, bank, capsys):
     bank_app.run()
     captured = capsys.readouterr()
-    assert "Withdrew $50.0 from Alice's account." in captured.out
+    assert "Withdrew $50.00 from Alice's account." in captured.out
     assert bank.get_account("Alice").balance == 50.0
 
 
-@patch("builtins.input", side_effect=["1", "Alice", "100", "1", "Bob", "50", "4", "Alice", "Bob", "50", "7"])
+@patch("builtins.input", side_effect=["1", "Alice", "100", "1", "Bob",
+                                      "50", "4", "Alice", "Bob", "50", "7"])
 def test_bank_app_transfer(mock_input, bank_app, bank, capsys):
     bank_app.run()
     captured = capsys.readouterr()
-    assert "Transferred $50.0 from Alice's account to Bob's account." in captured.out
+    assert "Transferred $50.00 from Alice's account to Bob's account." in captured.out
     assert bank.get_account("Alice").balance == 50.0
     assert bank.get_account("Bob").balance == 100.0
 

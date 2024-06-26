@@ -1,3 +1,4 @@
+# standard import
 import csv
 from typing import Dict, Optional
 
@@ -10,14 +11,14 @@ class Account:
     def deposit(self, deposit_amount: float) -> None:
         if deposit_amount > 0:
             self.balance += deposit_amount
-            print(f"Deposited ${deposit_amount} to {self.account_name}'s account.")
+            print(f"Deposited ${deposit_amount:.2f} to {self.account_name}'s account.")
         else:
             raise ValueError("Deposit amount must be positive.")
 
     def withdraw(self, withdrawal_amount: float) -> None:
         if 0 < withdrawal_amount <= self.balance:
             self.balance -= withdrawal_amount
-            print(f"Withdrew ${withdrawal_amount} from {self.account_name}'s account.")
+            print(f"Withdrew ${withdrawal_amount:.2f} from {self.account_name}'s account.")
         else:
             raise ValueError("Insufficient funds or invalid amount.")
 
@@ -26,15 +27,15 @@ class Account:
             if self.account_name != target_account.account_name:
                 self.balance -= transfer_amount
                 target_account.deposit(transfer_amount)
-                print(f"Transferred ${transfer_amount} from {self.account_name}'s account to {
-                      target_account.account_name}'s account.")
+                print(f"Transferred ${transfer_amount:.2f} from {
+                      self.account_name}'s account to {target_account.account_name}'s account.")
             else:
                 raise ValueError("Unable to transfer funds to the same account.")
         else:
             raise ValueError("Insufficient funds or invalid amount.")
 
     def __str__(self) -> str:
-        return f"Account({self.account_name}, Balance: ${self.balance})"
+        return f"Account({self.account_name}, Balance: ${self.balance:.2f})"
 
 
 class Bank:
@@ -56,7 +57,7 @@ class Bank:
             writer = csv.writer(csvfile)
             writer.writerow(['Name', 'Balance'])
             for bank_account in self.accounts.values():
-                writer.writerow([bank_account.account_name, bank_account.balance])
+                writer.writerow([bank_account.account_name, f"{bank_account.balance:.2f}"])
         print(f"Bank state saved to {filename}.")
 
     def load_from_csv(self, filename: str) -> None:
