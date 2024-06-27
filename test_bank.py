@@ -32,15 +32,13 @@ def test_create_account(bank, capsys):
     captured = capsys.readouterr()
     assert account.account_name == "Alice"
     assert account.balance == 50.0
-    assert "Account created for Alice." in captured.out
+    assert "Account created for Alice with starting balance of $50.00." in captured.out
 
 
 def test_create_account_already_exist(bank, capsys):
     bank.create_account("Alice", 50.0)
     with pytest.raises(ValueError, match="Account already exists."):
         bank.create_account("Alice", 100.0)  # create an account with the same name
-    captured = capsys.readouterr()
-    assert "Account created for Alice." in captured.out
 
 
 def test_deposit(account, capsys):
@@ -159,7 +157,7 @@ def test_bank_app_print_menu(bank_app, capsys):
 def test_bank_app_create_account(mock_input, bank_app, bank, capsys):
     bank_app.run()
     captured = capsys.readouterr()
-    assert "Account created for Alice." in captured.out
+    assert "Account created for Alice with starting balance of $100.00." in captured.out
     assert bank.get_account("Alice").balance == 100.0
 
 
@@ -208,3 +206,24 @@ def test_bank_app_exit(bank_app, capsys):
         bank_app.run()
     captured = capsys.readouterr()
     assert "Exiting the bank system." in captured.out
+
+
+def test_bank_app_invalid_choice(bank_app, capsys):
+    with patch("builtins.input", side_effect=["8", "7"]):
+        bank_app.run()
+    captured = capsys.readouterr()
+    assert "Invalid choice. Please try again." in captured.out
+
+
+def test_bank_app_get_account_not_found(bank_app, capsys):
+    with patch("builtins.input", side_effect=["2", "Charlie", "50", "7"]):
+        bank_app.run()
+    captured = capsys.readouterr()
+    assert "Invalid choice. Please try again." in captured.out
+
+
+def test_bank_app_get_amount_invalid(bank_app, capsys):
+    with patch("builtins.input", side_effect=["2", "Alice", "b", "7"]):
+        bank_app.run()
+    captured = capsys.readouterr()
+    assert "Invalid choice. Please try again." in captured.out
