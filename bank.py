@@ -92,7 +92,8 @@ class Account:
         Raises
         ------
         ValueError
-            If the transfer amount is greater than the balance, not positive, or the target account is the same as the current account.
+            If the transfer amount is greater than the balance, not positive,
+            or the target account is the same as the current account.
         """
         if 0 < transfer_amount <= self.balance:
             if self.account_name != target_account.account_name:
